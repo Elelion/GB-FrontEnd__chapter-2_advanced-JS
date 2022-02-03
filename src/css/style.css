@@ -1,0 +1,42 @@
+.header {
+  height: 40px;
+  border: 1px solid black;
+  padding: 0 15px 0 15px;
+}
+
+.btn-cart {
+  float: right;
+  margin-top: 10px;
+}
+
+/**/
+
+.main {
+  max-width: 1140px;
+  height: 100vh;
+  margin: 0 auto 0 auto;
+}
+
+.products {
+  display: flex;
+  height: inherit;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.product-item {
+  display: flex;
+  min-width: 250px;
+  width: 250px;
+  margin: 10px;
+  border: 1px solid gray;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.product-item__img {
+  min-width: 230px;
+  width: 230px;
+  height: 200px;
+}

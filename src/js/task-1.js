@@ -100,16 +100,15 @@ console.log('----');
  */
 
 // правильнее задавать в стилях, по этому все классы уже предопределены в scc
-/*
+
 document.querySelector('header').classList.add('header');
-let header = document.querySelector('.header');
+// let header = document.querySelector('.header');
 
 document.querySelector('main').classList.add('main');
-let main = document.querySelector('.main');
+// let main = document.querySelector('.main');
 
-let buttonCart = document.querySelector('.btn-cart');
-let productsWrapper = document.querySelector('.products');
-*/
+// let buttonCart = document.querySelector('.btn-cart');
+// let productsWrapper = document.querySelector('.products');
 
 /*
 header.style = `
@@ -158,7 +157,10 @@ const products = [
 //Добавить в выводе изображение
 const renderProduct = (title = 'заголовок', price = 0, index) => {
   return `<div class="product-item">
-            <img src="https://picsum.photos/200/300?random=${index}" alt="${index}" class="product-item__img">
+            <img src="https://picsum.photos/200/300?random=${index}" 
+              alt="${index}" 
+              class="product-item__img">
+              
             <h3 class="product-item__title">${title}</h3>
             <p class="product-item__price">${price}</p>
             <button class=product-item__buy-btn">Купить</button>
@@ -181,8 +183,12 @@ const renderPage = (list) => {
    * важным параметром этой функции. Это обязательный параметр.
    * С этим параметром вы можете модифицировать каждый элемент массива и создать
    * новую функцию.
+   *
+   * Правильнее использовать не innerHTML а insertAdjacentHTML
+   * тк при рендере большово кол-ва объектов, будет затрачено больше ресуров
+   * а insertAdjacentHTML - тратит меньше ресурсов
    */
-  document.querySelector('.products').innerHTML = list.map(
+  document.querySelector('.products').insertAdjacentHTML('beforeend', list.map(
     (item, index) => renderProduct(item.title, item.price, index)
 
     /**
@@ -195,7 +201,7 @@ const renderPage = (list) => {
      * по умолчанию). Таким образом, можно объяснить массив
      * преобразования в строку перед установкой innerHTML, добавив join(''):
      */
-  ).join('');
+  ).join(''));
 };
 
 renderPage(products);

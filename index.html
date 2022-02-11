@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Интернет-магазин</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Интернет-магазин</div>
+        <div class="cart">
+            <form action="#" class="search-form">
+                <input type="text" class="search-field">
+                <button class="btn-search" type="submit">
+                  Корзина
+                </button>
+            </form>
+
+            <button class="btn-cart" type="button">Корзина</button>
+            <div class="cart-block invisible">
+              <p class="cart-sum"></p>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="products"></div>
+    </main>
+
+    <div id="ajax-block"></div>
+
+    <script>
+      /**
+       * TODO: 1. Дан большой текст, в котором для оформления прямой речи
+       * используются одинарные кавычки. Придумать шаблон, который
+       * заменяет одинарные кавычки на двойные.
+       */
+
+      let str1 = "There is aren't no cow's level's are 5'1 don't it's beautiful 4'1";
+      console.log(str1.replace(/(['])/g, '\"'));
+
+
+      /**
+       * TODO: 2. Улучшить шаблон так, чтобы в конструкциях типа aren't
+       * одинарная кавычка не заменялась на двойную.
+       */
+      console.log(str1.replace(/(\d)['](\d)/g, '$1\"$2'));
+
+
+
+    </script>
+
+    <form action="GET" id="form__feedback">
+      <input type="text" id="formName" name="name">
+      <input type="text" id="formPhone" name="phone" placeholder="+7(000)000-0000">
+      <input type="text" id="formEmail">
+      <textarea name="formMessage" id="formMessage" cols="30" rows="10"></textarea>
+      <button id="buttonForm">Отправить</button>
+    </form>
+
+    <script>
+      /**
+       * TODO: 3. *Создать форму обратной связи с полями: Имя, Телефон, E-mail,
+       * текст, кнопка Отправить. При нажатии на кнопку Отправить произвести
+       * валидацию полей следующим образом:
+       *
+       * a. Имя содержит только буквы.
+       *
+       * b. Телефон имеет вид +7(000)000-0000.
+       *
+       * c. E-mail имеет вид mymail@mail.ru, или my.mail@mail.ru, или
+       * my-mail@mail.ru.
+       *
+       * d. Текст произвольный.
+       *
+       * e. Если одно из полей не прошло валидацию, необходимо выделить это
+       * поле красной рамкой и сообщить пользователю об ошибке.
+       */
+
+      let form = document.getElementById('form__feedback');
+      let nameForm = document.getElementById('formName');
+      let phoneForm = document.getElementById('formPhone');
+      let emailForm = document.getElementById('formEmail');
+      let msgForm = document.getElementById('formMessage');
+      let buttonForm = document.getElementById('buttonForm');
+
+      /**
+       * Проверяем на буквы
+       *
+       * ^ - начало строки
+       * ( - начало захватывающей подмаски
+       * [a-zA-Z'-]{0,50} - от нуля до пятидесяти символов ', - или латинских букв
+       * | - или
+       * [а-яА-ЯёЁ'-]{0,50} - от нуля до пятидесяти символов ', - или русских букв
+       * ) - конец захватывающей подмаски
+       * $ - конец строки
+       */
+      function statusWords() {
+        let name = String(nameForm.value);
+        const ubound = 10;
+
+        let regExp = new RegExp( `^([a-zA-Z'-]{0,${ubound}}|[а-яА-ЯёЁ'-]{0,${ubound}})$` );
+        return regExp.test(name);
+      }
+
+      /**
+       * Проверяем на заданный формат: +7(000)000-0000
+       */
+      function statusPhone() {
+        let phone = String(phoneForm.value);
+        let regExp = new RegExp( `([+][78][(][0-9]{0,3}[)][0-9]{0,3}[-][0-9]{0,4})$` );
+
+        // let regExp = new RegExp( `^\+\d\(\d{3}\)\d{3}-\d{4}$/` );
+        //^\+\d\(\d{3}\)\d{3}-\d{4}$/
+        // console.log(regExp.test(phone))
+        return regExp.test(phone);
+      }
+
+      /**
+       * E-mail имеет вид mymail@mail.ru, или my.mail@mail.ru, или
+       * my-mail@mail.ru.
+       */
+      function statusEmail() {
+        let mail = String(emailForm.value);
+        let regExp = new RegExp( /([A-Za-z0-9_\-\.])+\@([A-Za-z])+\.([A-Za-z]{2,4})/ );
+
+        return regExp.test(mail);
+      }
+
+      /**/
+
+      function changeColor(target, color) {
+        target.style.color = color;
+        target.style.borderColor = color;
+      }
+
+      /**/
+
+      function checkName(event) {
+        if (statusWords() === false || nameForm.value === '') {
+          event.preventDefault();
+          changeColor(nameForm, 'red');
+        } else {
+          changeColor(nameForm, 'black');
+        }
+      }
+
+      function checkPhone(event) {
+        if (statusPhone() === false || phoneForm.value === '') {
+          event.preventDefault();
+          changeColor(phoneForm, 'red');
+        } else {
+          changeColor(phoneForm, 'black');
+        }
+      }
+
+      function checkMail(event) {
+        if (statusEmail() === false || emailForm.value === '') {
+          event.preventDefault();
+          changeColor(emailForm, 'red');
+        } else {
+          changeColor(emailForm, 'black');
+        }
+      }
+
+      /**/
+
+      form.onsubmit = (event) => {
+        checkName(event);
+        checkPhone(event);
+        checkMail(event);
+      }
+
+
+    </script>
+
+<!--    <script src="src/js/task-1.js"></script>-->
+<!--    <script src="src/js/task-2.js"></script>-->
+<!--    <script src="src/js/task-3.js"></script>-->
+<!--    <script src="src/js/task-4.js"></script>-->
+</body>
+</html>

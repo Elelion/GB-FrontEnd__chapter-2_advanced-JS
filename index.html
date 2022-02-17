@@ -6,176 +6,326 @@
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
-    <header>
+
+    <div id="app">
+      <div>{{ title }}</div>
+      <div>{{ sayHello() }}</div>
+
+      <!--
+      <a href="{{ link }}">Google</a>
+
+      так будет ошибка, тк нужно писать несколько иначе...
+      v-bind:href="link"
+      либо
+      :href="link"
+
+      v-bind - динамически связывает атрибуты тега или входной параметр
+      компонента с выражением
+      -->
+      <a :href="link">Google</a>
+
+      <!-- v-html - для вставки HTML кода -->
+      <div v-html="completeElement"></div>
+
+      <!--
+      v-model - связывает элементы форм и состояние приложения
+      имеет так же 3 параметра
+      .lazy - срабатывание будет при потери фокуса
+      .number - то что ввожу, будет преобразовано в число
+      .trim - обрезает
+      -->
+      <input type="text" v-model.lazy="name">
+      <p>{{ name }}</p>
+      <input type="text" v-model.number="someNumber">
+      <p>{{ someNumber }}</p>
+
+      <!--
+      v-on - событие, типа addEventListener, сокращенно @click="increase"
+      - закомментированный метод не совсем верный, тк нужно делать это в методах
+      - что бы передать event текущего объекта, нужно в v-on указать $event
+        в качестве аргумента
+      - @click.prevent - аналогично event.preventDefault();
+      - @mousemove — вызовет event.stopPropagation() при наведении мышкой. Те
+        прекращает дальнейшую передачу текущего события (предотвращает
+        всплытие по дереву DOM).
+      -->
+      <!-- <button v-on:click="counter++">clicked {{ counter}} times</button> -->
+      <!-- <button @click="increase($event, 2)">clicked {{ counter }} times</button> -->
+      <button @click="increase($event, 2)">
+        clicked {{ counter }} {{ counter > 10 ? '> 10' : '< 10'}} times
+      </button>
+
+      <p @mousemove="updateCoordinates($event)">
+        Current position {{ x }} / {{ y }}
+        <span @mousemove.stop>[ Don't catch coordinates Stop ]</span>
+        <span @mousemove.stop.prevent>[ Don't catch coordinates Prevent ]</span>
+      </p>
+
+      <hr>
+
+      <div>
+        <button @click="counter++">increase</button>
+        <button @click="counter--">decrease</button>
+        <button @click="secondCounter++">increase second counter</button>
+        <button @click="secondCounter--">decrease second counter</button>
+        <p>Counter: {{ counter }} | {{ secondCounter }}</p>
+        <p>Result: {{ counterResult() }} | {{ secondCounterResultComputed }}</p>
+      </div>
+
+      <hr>
+
+      <div class="block" :style="styleObject"></div>
+
+      <!--
+      :class="{block__red: isRed, block__blue: !isRed}"
+      вернет класс block__red ЕСЛИ значение isRed === true
+      вернет класс block__blue ЕСЛИ значение isRed === false
+
+      @click="isRed = !isRed"
+      при клике присваивает isRed = !isRed (true) / isRed = !isRed (false)
+      те как бы сделали переключатель
+      -->
+      <div class="block"
+           :class="{block__red: isRed, block__blue: !isRed}"
+           @click="isRed = !isRed">
+      </div>
+
+      <hr>
+
+      <input type="text" v-model="squareArea">
+      <input type="text" v-model="color">
+      <div class="block" :style="myStyleSquare"></div>
+
+      <hr>
+
+      <!--
+      v-if - аналог обычного if (...) {...}
+      если есть сложная логика, то лучше использовать v-show
+      тк с v-if - он полностью пропадает из дерева после чего заного
+      инициализируется
+
+      v-show - Переключает CSS-свойство display элемента, в зависимости от
+      того, истинно ли указанное выражение. При изменении состояния этой
+      директивы вызываются анимации, заданные в transition.
+      -->
+      <!-- <h2 v-if="show">i'm invisible</h2> -->
+      <h2 v-show="show">i'm invisible</h2>
+      <button @click="show = !show">hide / show</button>
+
+      <!-- полностью удалит один елемент и создаст второй и наоборот -->
+      <h3 v-if="show">H3: elem1: i'm invisible</h3>
+      <h3 v-else>H3: elem1: Wow i'm invisible</h3>
+
+      <hr>
+
+      <!--
+      v-for - аналог for (let item of itemS) {...}
+      на конце ВСЕГДА нужно ставить :key - иначе могут будут проблемы с отображением
+      :key - указываем id...
+
+      ИЛИ
+      По умолчанию v-for будет пытаться обновить элементы «на месте», не
+      перемещая их. Если вам нужно, чтобы элементы перемещались, сохраняя
+      явную упорядоченность, укажите атрибут key:
+      -->
+      <div class="products">
+        <div class="product" v-for="product of products" :key="product.id">
+          <img :src="product.img" alt="">
+          <div>
+            <p>{{ product.title }}</p>
+            <p>{{ product.quantity }}</p>
+            <p>{{ product.price * product.quantity }}</p>
+          </div>
+        </div>
+      </div>
+      <button @click="addProduct()">Add new</button>
+
+      <!--
+      меняем у имеющегося массива данные
+      если мы изменим индекс массива на тот что еще нету, но добавим это значение
+      после, то после добавления, vue отследит это, и изменение будет работать на
+      том елементе массива, которого сейчас еще нету, но будет потом
+      -->
+      <button @click="products[1].quantity++">Change</button>
+    </div>
+
+
+    <!-- * -------------------------------------------------------------- * -->
+
+
+    <div id="task5">
+      <header>
         <div class="logo">Интернет-магазин</div>
         <div class="cart">
-            <form action="#" class="search-form">
-                <input type="text" class="search-field">
-                <button class="btn-search" type="submit">
-                  Корзина
-                </button>
-            </form>
+          <form action="#" class="search-form" @submit.prevent="filter()">
+            <input type="text" class="search-field" v-model="searchLine">
+            <button class="btn-search" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
 
-            <button class="btn-cart" type="button">Корзина</button>
-            <div class="cart-block invisible">
-              <p class="cart-sum"></p>
+          <button class="btn-cart" type="button" @click="showCart = !showCart">Корзина</button>
+          <div class="cart-block" v-show="showCart">
+            <p v-if="!cartItems.length">Корзина пуста</p>
+
+            <div class="cart-item" v-for="item of cartItems" :key="item.id_product">
+              <div class="product-bio">
+                <img :src="imgCart" alt="Some img">
+                <div class="product-desc">
+                  <h3 class="cart__product-title">{{item.product_name}}</h3>
+                  <p class="product-quantity">{{item.quantity}}</p>
+                  <p class="product-price">{{item.price}} ₽/1шт</p>
+                </div>
+              </div>
+              <div class="right-block">
+                <p class="product-price">{{item.quantity * item.price}} ₽</p>
+                <button class="del-btn" @click="remove(item)">x</button>
+              </div>
             </div>
+          </div>
         </div>
-    </header>
-    <main>
-        <div class="products"></div>
-    </main>
+      </header>
 
-    <div id="ajax-block"></div>
-
-    <script>
-      /**
-       * TODO: 1. Дан большой текст, в котором для оформления прямой речи
-       * используются одинарные кавычки. Придумать шаблон, который
-       * заменяет одинарные кавычки на двойные.
-       */
-
-      let str1 = "There is aren't no cow's level's are 5'1 don't it's beautiful 4'1";
-      console.log(str1.replace(/(['])/g, '\"'));
+      <main>
+        <div class="products">
+          <div class="product-item" v-for="product of filtered" :key="product.id_product">
+            <img :src="imgCatalog" alt="Some img">
+            <div class="desc">
+              <h3>{{product.product_name}}</h3>
+              <p>{{product.price}}₽</p>
+              <button class="buy-btn" @click="addProduct(product)">Купить</button>
+            </div>
+          </div>
+        </div>
+      </main>
 
 
-      /**
-       * TODO: 2. Улучшить шаблон так, чтобы в конструкциях типа aren't
-       * одинарная кавычка не заменялась на двойную.
-       */
-      console.log(str1.replace(/(\d)['](\d)/g, '$1\"$2'));
+    </div>
 
 
+    <!-- * -------------------------------------------------------------- * -->
 
-    </script>
 
-    <form action="GET" id="form__feedback">
-      <input type="text" id="formName" name="name">
-      <input type="text" id="formPhone" name="phone" placeholder="+7(000)000-0000">
-      <input type="text" id="formEmail">
-      <textarea name="formMessage" id="formMessage" cols="30" rows="10"></textarea>
-      <button id="buttonForm">Отправить</button>
-    </form>
+    <!-- подключаем Vue фреймворк через CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+    <script src="src/js/task-5.js"></script>
 
     <script>
       /**
-       * TODO: 3. *Создать форму обратной связи с полями: Имя, Телефон, E-mail,
-       * текст, кнопка Отправить. При нажатии на кнопку Отправить произвести
-       * валидацию полей следующим образом:
+       * Создаем новый экземпляр класса Vue
+       * те создаем наше приложение, где app - будет самым главным компонентом
+       * и все что нам потребуется, мы будем описывать здесь
        *
-       * a. Имя содержит только буквы.
+       * Декларированные свойства:
+       * el: '#app', - привязываем наше приложение к элементу по ID
+       * data - для хранения всех не обходимых данных
+       * methods - для хранения методов (ф-ций итп)
        *
-       * b. Телефон имеет вид +7(000)000-0000.
-       *
-       * c. E-mail имеет вид mymail@mail.ru, или my.mail@mail.ru, или
-       * my-mail@mail.ru.
-       *
-       * d. Текст произвольный.
-       *
-       * e. Если одно из полей не прошло валидацию, необходимо выделить это
-       * поле красной рамкой и сообщить пользователю об ошибке.
+       * VueJS построен на шаблоне MVVM, это:
+       * Model - это методы
+       * View - это template
+       * ViewModel - это то что в data
        */
+      const app = new Vue({
+        el: '#app',
 
-      let form = document.getElementById('form__feedback');
-      let nameForm = document.getElementById('formName');
-      let phoneForm = document.getElementById('formPhone');
-      let emailForm = document.getElementById('formEmail');
-      let msgForm = document.getElementById('formMessage');
-      let buttonForm = document.getElementById('buttonForm');
+        data: {
+          title: 'hello VueJS',
+          link: 'http://google.com',
+          completeElement: `
+            <span>i'm a new element:
+              <a href="https://google.com" id="link">google</a>
+            </span>`,
 
-      /**
-       * Проверяем на буквы
-       *
-       * ^ - начало строки
-       * ( - начало захватывающей подмаски
-       * [a-zA-Z'-]{0,50} - от нуля до пятидесяти символов ', - или латинских букв
-       * | - или
-       * [а-яА-ЯёЁ'-]{0,50} - от нуля до пятидесяти символов ', - или русских букв
-       * ) - конец захватывающей подмаски
-       * $ - конец строки
-       */
-      function statusWords() {
-        let name = String(nameForm.value);
-        const ubound = 10;
+          name: '',
+          someNumber: 0,
 
-        let regExp = new RegExp( `^([a-zA-Z'-]{0,${ubound}}|[а-яА-ЯёЁ'-]{0,${ubound}})$` );
-        return regExp.test(name);
-      }
+          counter: 0,
+          secondCounter: 0,
 
-      /**
-       * Проверяем на заданный формат: +7(000)000-0000
-       */
-      function statusPhone() {
-        let phone = String(phoneForm.value);
-        let regExp = new RegExp( `([+][78][(][0-9]{0,3}[)][0-9]{0,3}[-][0-9]{0,4})$` );
+          x: 0,
+          y: 0,
 
-        // let regExp = new RegExp( `^\+\d\(\d{3}\)\d{3}-\d{4}$/` );
-        //^\+\d\(\d{3}\)\d{3}-\d{4}$/
-        // console.log(regExp.test(phone))
-        return regExp.test(phone);
-      }
+          styleObject: {
+            backgroundColor: '#0f0',
+          },
 
-      /**
-       * E-mail имеет вид mymail@mail.ru, или my.mail@mail.ru, или
-       * my-mail@mail.ru.
-       */
-      function statusEmail() {
-        let mail = String(emailForm.value);
-        let regExp = new RegExp( /([A-Za-z0-9_\-\.])+\@([A-Za-z])+\.([A-Za-z]{2,4})/ );
+          isRed: false,
 
-        return regExp.test(mail);
-      }
+          squareArea: 100,
+          color: '#ccc',
 
-      /**/
+          show: true,
 
-      function changeColor(target, color) {
-        target.style.color = color;
-        target.style.borderColor = color;
-      }
+          products: [
+            {img: 'https://via.placeholder.com/200x150', title: 'Notebook', price: 1000, quantity: 1},
+            {img: 'https://via.placeholder.com/200x150', title: 'Mouse', price: 2000, quantity: 1},
+            {img: 'https://via.placeholder.com/200x150', title: 'Chair', price: 3000, quantity: 1},
+          ],
+        },
 
-      /**/
+        methods: {
+         sayHello() {
+            /**
+             * будет ВЕЗДЕ Hi world, из за реактивности, это метод всегда будет
+             * перевыполнятся, каждый раз когда мы его переопределяем.
+             * те он каждый раз пересчитывается когда мы его вызываем, с ним
+             * нужно быть аккуратным !!!
+             */
+            this.title = 'Hi world!';
+            return this.title;
+          },
 
-      function checkName(event) {
-        if (statusWords() === false || nameForm.value === '') {
-          event.preventDefault();
-          changeColor(nameForm, 'red');
-        } else {
-          changeColor(nameForm, 'black');
+          increase(event, step) {
+            console.log(event)
+            this.counter += step;
+          },
+
+          updateCoordinates(event) {
+            this.x = event.clientX;
+            this.y = event.clientY;
+          },
+
+          /**
+           * правильнее разместить это в computed
+           * сдесь же размещаем чисто ради примера
+           */
+          counterResult() {
+            console.log('Method result');
+            return this.counter > 5 ? ' > 5' : ' < 5';
+          },
+
+          addProduct() {
+            this.products.push({img: 'https://via.placeholder.com/200x150', title: 'SuperChair', price: 5000, quantity: 1});
+          },
+        },
+
+        /**
+         * результатом будут уже готовые значения, сюда НЕ чего НЕльзя ПЕРЕДАВАТЬ
+         * это закешированное вычисленное значение, те если значение НЕ изменилось
+         * то оно будет доставаться из кеша, а не рендериться заного!!!
+         *
+         * Если нужно что то высчитывать - НЕ нужно бежать к методам, всегда
+         * делать Computed - потому что это отличная практика!!!
+         */
+        computed: {
+          secondCounterResultComputed() {
+            console.log('Computed computedProp');
+            return this.secondCounter > 5 ? ' > 5' : ' < 5';
+          },
+
+          myStyleSquare() {
+            return {
+              backgroundColor: this.color,
+              width: `${this.squareArea}px`,
+              height: `${this.squareArea}px`,
+            }
+          },
+
         }
-      }
-
-      function checkPhone(event) {
-        if (statusPhone() === false || phoneForm.value === '') {
-          event.preventDefault();
-          changeColor(phoneForm, 'red');
-        } else {
-          changeColor(phoneForm, 'black');
-        }
-      }
-
-      function checkMail(event) {
-        if (statusEmail() === false || emailForm.value === '') {
-          event.preventDefault();
-          changeColor(emailForm, 'red');
-        } else {
-          changeColor(emailForm, 'black');
-        }
-      }
-
-      /**/
-
-      form.onsubmit = (event) => {
-        checkName(event);
-        checkPhone(event);
-        checkMail(event);
-      }
-
-
+      });
     </script>
-
-<!--    <script src="src/js/task-1.js"></script>-->
-<!--    <script src="src/js/task-2.js"></script>-->
-<!--    <script src="src/js/task-3.js"></script>-->
-<!--    <script src="src/js/task-4.js"></script>-->
 </body>
 </html>

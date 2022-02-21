@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Интернет-магазин</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+
+    <div id="app">
+      <!-- компонент Обязательно! должен быть в теле VueJs -> app -->
+      <!-- вариант подключения №1 -->
+      <!-- <some-el /> -->
+    </div>
+
+
+    <!-- * -------------------------------------------------------------- * -->
+
+
+    <!-- TODO: задание к проверке -->
+    <div id="appTask6">
+
+      <header>
+        <div class="logo">Интернет-магазин</div>
+        <div class="cart">
+          <!--
+          <form action="#" class="search-form" @submit.prevent="filter()">
+            <input type="text" class="search-field" v-model="searchLine">
+            <button class="btn-search" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+          -->
+
+          <template>
+            <search />
+          </template>
+
+          <button class="btn-cart" type="button" @click="showCart = !showCart">Корзина</button>
+
+          <cart
+            :cart-items="cartItems"
+            :img="imgCart"
+            :visibility="showCart">
+          </cart>
+
+
+<!--          <div class="cart-block" ref="cart" v-show="showCart">-->
+<!--            <p v-if="!cartItems.length">Корзина пуста</p>-->
+
+<!--            <div class="cart-item" v-for="item of cartItems" :key="item.id_product">-->
+<!--              <div class="product-bio">-->
+<!--                <img :src="imgCart" alt="Some img">-->
+<!--                <div class="product-desc">-->
+<!--                  <h3 class="cart__product-title">{{item.product_name}}</h3>-->
+<!--                  <p class="product-quantity">{{item.quantity}}</p>-->
+<!--                  <p class="product-price">{{item.price}} ₽/1шт</p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="right-block">-->
+<!--                <p class="product-price">{{item.quantity * item.price}} ₽</p>-->
+<!--                <button class="del-btn" @click="remove(item)">x</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
+      </header>
+
+      <main>
+
+        <products
+          ref="products"
+          :products="filtered"
+          :img="imgCatalog"
+          @add-product="addProduct">
+        </products>
+
+        <error ref="error"/>
+
+        <!-- ref - название элемента или компонента для регистрации ссылки на него -->
+
+        <!--
+        <div class="products" ref="product">
+          <div class="product-item" v-for="product of filtered" :key="product.id_product">
+            <img :src="imgCatalog" alt="Some img">
+            <div class="desc">
+              <h3>{{product.product_name}}</h3>
+              <p>{{product.price}}₽</p>
+              <button class="buy-btn" @click="addProduct(product)">Купить</button>
+            </div>
+          </div>
+        </div>
+        -->
+
+      </main>
+
+    </div>
+
+
+
+
+    <!-- * -------------------------------------------------------------- * -->
+
+
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+
+    <!-- подключаем Vue фреймворк через CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+
+    <!-- ** -->
+
+
+    <!-- файлы для домашки -->
+    <script src="src/js/task-6-appSearch.js" type="module"></script>
+    <script src="src/js/task-6-appCartComponent.js" type="module"></script>
+    <script src="src/js/task-6-appProductComponent.js" type="module"></script>
+    <script src="src/js/task-6-appError.js" type="module"></script>
+
+
+
+    <!-- ** -->
+
+
+    <!-- указываем как модуль -->
+<!--    <script src="src/js/task-6-components.js" type="module"></script>-->
+<!--    <script src="src/js/task-6-components-2.js" type="module"></script>-->
+
+
+    <!-- ** -->
+
+
+    <!-- главный файл всегда с низу -->
+<!--    <script src="src/js/task-6.js" type="module"></script>-->
+    <script src="src/js/task-6-app.js" type="module"></script>
+
+</body>
+</html>

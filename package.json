@@ -4,7 +4,7 @@
   "description": "Урок 6. Компоненты Vue.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,23 @@
   },
   "homepage": "https://github.com/Elelion/GB-FrontEnd__chapter-2_advanced-JS#readme",
   "dependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
     "axios": "^0.26.0",
+    "copy-webpack-plugin": "^10.2.4",
+    "css-loader": "^6.6.0",
+    "css-minimizer-webpack-plugin": "^3.4.1",
     "express": "^4.17.3",
-    "moment": "^2.29.1"
-  }
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jasmine": "^3.6.4",
+    "jasmine-core": "^3.6.0",
+    "mini-css-extract-plugin": "^2.5.3",
+    "moment": "^2.29.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "keywords": []
 }
